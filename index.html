@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Happy Idol — Story Portal / Mobile Form Pilot Master</title>
+<title>Happy Idol — Story Portal / Mobile Form Live</title>
 <style>
 :root{--yellow:#FEDD58;--yellow-deep:#D8A91E;--ink:#26231f;--muted:#756f65;--cream:#fffaf0;--line:#eadfca;--white:#fff}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Arial,sans-serif;background:linear-gradient(180deg,#fffef9,#fff8e5);color:var(--ink)}
@@ -25,8 +25,8 @@ button{border:0;border-radius:999px;padding:14px 16px;font-size:16px;font-weight
 <section id="welcomeScreen" class="welcome-screen">
   <div class="welcome-card">
     <h1>Happy Idol Story Portal</h1>
-    <p class="welcome-lead">ระบบทดสอบส่งข้อมูลเข้า Google Sheet และ Drive</p>
-    <button class="start-btn" onclick="startForm()">เริ่มสร้างเรื่องราวของคุณ</button>
+    <p class="welcome-lead">ระบบส่งเรื่องราวเข้า Google Sheet และ Drive จริง</p>
+    <button class="start-btn" onclick="startForm()">เริ่มส่งเรื่องราว</button>
   </div>
 </section>
 
@@ -51,20 +51,42 @@ button{border:0;border-radius:999px;padding:14px 16px;font-size:16px;font-weight
 </div>
 
 <script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzV7VnsO59_-lIvHGy3W5NtMbGvw-5JRAQFHaM3Z-UqRB4Ww1RNgo7vFssV46vplm8J/exec";
+
 function startForm() {
   document.getElementById('welcomeScreen').hidden = true;
   document.getElementById('appShell').hidden = false;
   document.getElementById('bottomNav').hidden = false;
 }
 
-function submitForm() {
+async function submitForm() {
   const name = document.getElementById('recipientName').value;
   const story = document.getElementById('storyName').value;
   
-  console.log("กำลังส่งข้อมูล...", { name, story });
-  alert("จำลองการส่งข้อมูลสำเร็จ! (เชื่อมต่อปุ่ม ID=next เรียบร้อย)");
-  
-  // จุดสำหรับใส่ fetch เชื่อมต่อ Google Apps Script Webhook ในขั้นตอนถัดไป
+  const submitBtn = document.getElementById('next');
+  submitBtn.disabled = true;
+  submitBtn.innerText = "กำลังส่งข้อมูลเข้า Google Sheet...";
+
+  try {
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipientName: name,
+        storyName: story,
+        timestamp: new Date().toISOString()
+      })
+    });
+
+    alert("ส่งข้อมูลเข้า Google Sheet สำเร็จเรียบร้อยแล้วครับ! 🎉");
+    submitBtn.innerText = "ส่งสำเร็จแล้ว 🤍";
+  } catch (error) {
+    console.error("Error:", error);
+    alert("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
+    submitBtn.disabled = false;
+    submitBtn.innerText = "ส่งเรื่องของฉันให้ Happy Idol 🤍";
+  }
 }
 </script>
 
