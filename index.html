@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Happy Idol — Story Portal / Mobile Form Pilot Master</title>
+<style>
+:root{--yellow:#FEDD58;--yellow-deep:#D8A91E;--ink:#26231f;--muted:#756f65;--cream:#fffaf0;--line:#eadfca;--white:#fff}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Arial,sans-serif;background:linear-gradient(180deg,#fffef9,#fff8e5);color:var(--ink)}
+.wrap{max-width:590px;margin:auto;padding:18px 16px 132px;min-height:100vh}.brand{display:flex;justify-content:center;align-items:center;margin:2px 0 8px}
+.kicker{font-size:12px;font-weight:900;letter-spacing:.08em;margin-top:25px;color:#9a7410}.hero{font-family:Georgia,serif;font-size:39px;line-height:1.06;margin:7px 0}.lead{color:var(--muted);line-height:1.6}
+.card{background:#fff;border:1px solid var(--line);border-radius:23px;padding:21px;box-shadow:0 12px 34px #76520d12;margin-top:20px}
+input[type=text],textarea,select{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px 14px;font:inherit;background:#fff;outline:none;margin-top:8px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#fffffff2;backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 16px;display:flex;justify-content:center}
+.navin{display:flex;gap:10px;width:min(558px,100%)}
+button{border:0;border-radius:999px;padding:14px 16px;font-size:16px;font-weight:900;flex:1;cursor:pointer}
+.next{background:var(--yellow);color:#332a11}
+.welcome-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(180deg,#fffef9,#fff5ce)}
+.welcome-card{width:min(560px,100%);background:#fff;border:1px solid var(--line);border-radius:28px;padding:26px 22px;box-shadow:0 18px 50px #76520d18;text-align:center}
+.start-btn{width:100%;border:0;border-radius:999px;padding:15px 18px;font-size:17px;font-weight:900;background:var(--yellow);color:#332a11;cursor:pointer;margin-top:20px}
+</style>
+</head>
+<body>
+
+<section id="welcomeScreen" class="welcome-screen">
+  <div class="welcome-card">
+    <h1>Happy Idol Story Portal</h1>
+    <p class="welcome-lead">ระบบทดสอบส่งข้อมูลเข้า Google Sheet และ Drive</p>
+    <button class="start-btn" onclick="startForm()">เริ่มสร้างเรื่องราวของคุณ</button>
+  </div>
+</section>
+
+<div id="appShell" class="wrap" hidden>
+  <div class="card">
+    <h2>ข้อมูลผู้ส่งเรื่อง</h2>
+    <div class="q">
+      <label>ชื่อของคุณ (Recipient Name):</label>
+      <input type="text" id="recipientName" value="Tee" placeholder="กรอกชื่อของคุณ">
+    </div>
+    <div class="q">
+      <label>เรื่องราวของคุณ (Story Name):</label>
+      <input type="text" id="storyName" value="Inspirational Life" placeholder="กรอกชื่อเรื่องราว">
+    </div>
+  </div>
+</div>
+
+<div id="bottomNav" class="nav" hidden>
+  <div class="navin">
+    <button type="button" id="next" class="next" onclick="submitForm()">ส่งเรื่องของฉันให้ Happy Idol 🤍</button>
+  </div>
+</div>
+
+<script>
+function startForm() {
+  document.getElementById('welcomeScreen').hidden = true;
+  document.getElementById('appShell').hidden = false;
+  document.getElementById('bottomNav').hidden = false;
+}
+
+function submitForm() {
+  const name = document.getElementById('recipientName').value;
+  const story = document.getElementById('storyName').value;
+  
+  console.log("กำลังส่งข้อมูล...", { name, story });
+  alert("จำลองการส่งข้อมูลสำเร็จ! (เชื่อมต่อปุ่ม ID=next เรียบร้อย)");
+  
+  // จุดสำหรับใส่ fetch เชื่อมต่อ Google Apps Script Webhook ในขั้นตอนถัดไป
+}
+</script>
+
+</body>
+</html>
