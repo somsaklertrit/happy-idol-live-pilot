@@ -983,19 +983,31 @@ next.onclick=async()=>{
   if(!form.querySelector('[name="consent_marketing"]:checked')){
     alert(ui('กรุณาเลือกว่าจะอนุญาตหรือไม่อนุญาตการใช้ผลงานเพื่อการประชาสัมพันธ์ครับ','Please choose whether you allow the work to be used for promotional purposes.'));return
   }
-  if(!(window.google&&google.script&&google.script.run)){
-    alert(ui('ไฟล์นี้ต้องเปิดผ่าน Happy Idol Live Pilot URL ที่ติดตั้งด้วย Google Apps Script จึงจะส่งข้อมูลได้ครับ','This file must be opened through the Happy Idol Live Pilot URL installed with Google Apps Script before it can submit data.'));
-    return;
-  }
-  try{
-    setSubmitting(true,ui('กำลังส่งข้อมูลและรูปภาพไปยัง Happy Idol...','Submitting your information and photos to Happy Idol...'));
-    const payload=await buildSubmissionPayload();
-    google.script.run
-      .withSuccessHandler(handleSubmitSuccess)
-      .withFailureHandler(handleSubmitFailure)
-      .submitHappyIdol(payload);
-  }catch(e){handleSubmitFailure(e)}
-};
+  try {
+  setSubmitting(true, ui('กำลังส่งข้อมูลและรูปภาพไปยัง Happy Idol...','Submitting your information and photos to Happy Idol...'));
+  const payload = await buildSubmissionPayload();
+  
+  // ลิงก์ Web App URL ตัวจริง
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzV7VnsO59_-IIvHGy3W5NtMbGvw-5JRAQFHaM3Z-UqRB4Ww1RNgo7vfssV46vplm8J/exec';
+  
+  // ส่งข้อมูลผ่าน Fetch API แบบซ่อนลิงก์
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.success) {
+      handleSubmitSuccess(data.result);
+    } else {
+      handleSubmitFailure(data.error);
+    }
+  })
+  .catch(e => handleSubmitFailure(e));
+} catch(e) {
+  handleSubmitFailure(e);
+}
 back.onclick=()=>{if(cur>0){cur--;update()}};
 form.addEventListener('input',()=>localStorage.setItem('hi_draft_v243',JSON.stringify(serialize())));
 document.getElementById('saveDraft').onclick=()=>{localStorage.setItem('hi_draft_v243',JSON.stringify(serialize()));localStorage.setItem('hi_step_v243',cur);alert(ui('บันทึกแบบร่างในอุปกรณ์นี้แล้วครับ','Draft saved on this device.'))};
