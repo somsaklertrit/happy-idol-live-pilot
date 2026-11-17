@@ -1,4 +1,97 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Happy Idol — Story Portal / Mobile Form Live</title>
+<style>
+:root{--yellow:#FEDD58;--yellow-deep:#D8A91E;--ink:#26231f;--muted:#756f65;--cream:#fffaf0;--line:#eadfca;--white:#fff}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Arial,sans-serif;background:linear-gradient(180deg,#fffef9,#fff8e5);color:var(--ink)}
+.wrap{max-width:590px;margin:auto;padding:18px 16px 132px;min-height:100vh}.brand{display:flex;justify-content:center;align-items:center;margin:2px 0 8px}
+.kicker{font-size:12px;font-weight:900;letter-spacing:.08em;margin-top:25px;color:#9a7410}.hero{font-family:Georgia,serif;font-size:39px;line-height:1.06;margin:7px 0}.lead{color:var(--muted);line-height:1.6}
+.card{background:#fff;border:1px solid var(--line);border-radius:23px;padding:21px;box-shadow:0 12px 34px #76520d12;margin-top:20px}
+input[type=text],textarea,select{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px 14px;font:inherit;background:#fff;outline:none;margin-top:8px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#fffffff2;backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 16px;display:flex;justify-content:center}
+.navin{display:flex;gap:10px;width:min(558px,100%)}
+button{border:0;border-radius:999px;padding:14px 16px;font-size:16px;font-weight:900;flex:1;cursor:pointer}
+.next{background:var(--yellow);color:#332a11}
+.welcome-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(180deg,#fffef9,#fff5ce)}
+.welcome-card{width:min(560px,100%);background:#fff;border:1px solid var(--line);border-radius:28px;padding:26px 22px;box-shadow:0 18px 50px #76520d18;text-align:center}
+.start-btn{width:100%;border:0;border-radius:999px;padding:15px 18px;font-size:17px;font-weight:900;background:var(--yellow);color:#332a11;cursor:pointer;margin-top:20px}
+</style>
+</head>
+<body>
+
+<section id="welcomeScreen" class="welcome-screen">
+  <div class="welcome-card">
+    <h1>Happy Idol Story Portal</h1>
+    <p class="welcome-lead">ระบบส่งเรื่องราวเข้า Google Sheet และ Drive จริง</p>
+    <button class="start-btn" onclick="startForm()">เริ่มส่งเรื่องราว</button>
+  </div>
+</section>
+
+<div id="appShell" class="wrap" hidden>
+  <div class="card">
+    <h2>ข้อมูลผู้ส่งเรื่อง</h2>
+    <div class="q">
+      <label>ชื่อของคุณ (Recipient Name):</label>
+      <input type="text" id="recipientName" value="Tee" placeholder="กรอกชื่อของคุณ">
+    </div>
+    <div class="q">
+      <label>เรื่องราวของคุณ (Story Name):</label>
+      <input type="text" id="storyName" value="Inspirational Life" placeholder="กรอกชื่อเรื่องราว">
+    </div>
+  </div>
+</div>
+
+<div id="bottomNav" class="nav" hidden>
+  <div class="navin">
+    <button type="button" id="next" class="next" onclick="submitForm()">ส่งเรื่องของฉันให้ Happy Idol 🤍</button>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzV7VnsO59_-lIvHGy3W5NtMbGvw-5JRAQFHaM3Z-UqRB4Ww1RNgo7vFssV46vplm8J/exec";
+
+function startForm() {
+  document.getElementById('welcomeScreen').hidden = true;
+  document.getElementById('appShell').hidden = false;
+  document.getElementById('bottomNav').hidden = false;
+}
+
+async function submitForm() {
+  const name = document.getElementById('recipientName').value;
+  const story = document.getElementById('storyName').value;
+  
+  const submitBtn = document.getElementById('next');
+  submitBtn.disabled = true;
+  submitBtn.innerText = "กำลังส่งข้อมูลเข้า Google Sheet...";
+
+  try {
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipientName: name,
+        storyName: story,
+        timestamp: new Date().toISOString()
+      })
+    });
+
+    alert("ส่งข้อมูลเข้า Google Sheet สำเร็จเรียบร้อยแล้วครับ! 🎉");
+    submitBtn.innerText = "ส่งสำเร็จแล้ว 🤍";
+  } catch (error) {
+    console.error("Error:", error);
+    alert("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
+    submitBtn.disabled = false;
+    submitBtn.innerText = "ส่งเรื่องของฉันให้ Happy Idol 🤍";
+  }
+}
+</script>
+
+</body>
+</html>
 <!-- saved from url=(0057)https://94bf91c8.happy-idol-live-pilot-staging.pages.dev/ -->
 <html lang="th" style="--hi-viewport-height: 735px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!--<base target="_top">--><base href="." target="_top">
@@ -345,6 +438,103 @@ body{min-height:100vh;min-height:100dvh}
 .language-switch{display:flex;justify-content:flex-end;gap:4px;margin:0 0 10px}.language-switch button{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:6px 12px;font:700 13px/1 system-ui;cursor:pointer}.language-switch button[aria-pressed="true"]{background:var(--brown);border-color:var(--brown);color:#fff}.language-note{font-size:12px;color:var(--muted);text-align:right;margin:-4px 2px 10px}
 .welcome-language-row{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:9;display:flex;justify-content:flex-end}.welcome-language-row .language-switch{margin:0}.welcome-language-row .language-switch button{min-height:32px}
 
+
+
+/* Desktop layout for the original Story Portal. */
+@media (min-width: 768px) {
+  :root {
+    --portal-content-width: clamp(40rem, 72vw, 54rem);
+    --portal-gutter: clamp(24px, 4vw, 48px);
+    --portal-card-padding: clamp(28px, 3.5vw, 44px);
+    --portal-nav-clearance: calc(96px + env(safe-area-inset-bottom, 0px));
+    scroll-padding-block-end: var(--portal-nav-clearance);
+  }
+
+  /* Keep the whole 9:16 poster and its artwork-aligned button in view. */
+  .intro-screen {
+    height: 100dvh !important;
+    min-height: 100dvh;
+  }
+
+  .intro-poster {
+    top: 50% !important;
+    width: min(
+      35rem,
+      calc(100% - 2 * var(--portal-gutter)),
+      calc((100dvh - 32px) * 0.5625)
+    ) !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .welcome-screen {
+    min-height: 100dvh;
+    padding: clamp(24px, 5vh, 56px) var(--portal-gutter);
+  }
+
+  #welcomeScreen[hidden] {
+    display: none;
+  }
+
+  .welcome-card {
+    width: min(46rem, 100%);
+    padding: var(--portal-card-padding);
+  }
+
+  .welcome-card h1 {
+    font-size: clamp(2.125rem, 3.2vw, 2.625rem);
+  }
+
+  .trust-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .language-switch {
+    --brown: var(--ink);
+  }
+
+  .wrap {
+    max-width: calc(var(--portal-content-width) + 2 * var(--portal-gutter));
+    min-height: 100dvh;
+    padding: clamp(24px, 4vh, 48px) var(--portal-gutter) var(--portal-nav-clearance);
+  }
+
+  .wrap > .hero {
+    font-size: clamp(2.4375rem, 3.8vw, 3rem);
+  }
+
+  .wrap > .lead,
+  .story-entry-sub,
+  .step > .help {
+    max-width: 65ch;
+  }
+
+  .story-entry-sub {
+    margin-inline: auto;
+  }
+
+  .card {
+    padding: var(--portal-card-padding);
+  }
+
+  .story-entry {
+    max-width: none;
+    margin-block-end: 32px;
+  }
+
+  .choices,
+  .entry-grid,
+  .story-type-grid,
+  .theme-choices,
+  .journey-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .color-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
 </style>
 </head>
 <body>
